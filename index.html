@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sri Banashankramma Interlocking Blocks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root {
+    --brick:  #B5451B;
+    --brick2: #8C2F0E;
+    --brick3: #D4632E;
+    --sand:   #F5ECD7;
+    --sand2:  #FDF7EE;
+    --gold2:  #F5C842;
+    --text:   #2C1A0E;
+    --muted:  #7A5C44;
+    --border: rgba(181,69,27,0.15);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--sand2);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--brick2);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 40px),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 40px);
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 28px 24px 20px;
+  }
+  .hero-left { flex: 1; }
+  .brand-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #FFD9B5;
+    margin-bottom: 14px;
+  }
+  .brand-dot { width: 6px; height: 6px; background: var(--gold2); border-radius: 50%; }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #FFF8F0;
+    line-height: 1.15;
+    margin-bottom: 4px;
+  }
+  .hero-title span { color: var(--gold2); }
+  .hero-subtitle {
+    font-size: 12px;
+    color: #F0C9A0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .hero-desc { font-size: 13px; color: #E8C9A0; line-height: 1.6; }
+
+  .qr-panel { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .qr-box {
+    background: #FFF8F0;
+    border-radius: 12px;
+    padding: 8px;
+    border: 2px solid rgba(255,255,255,0.3);
+  }
+  .qr-box canvas, .qr-box img { display: block; border-radius: 6px; }
+  .qr-label {
+    font-size: 10px;
+    color: #FFD9B5;
+    letter-spacing: 1px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .hero-strip {
+    position: relative;
+    z-index: 1;
+    background: rgba(0,0,0,0.25);
+    padding: 10px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .strip-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #F0C9A0; }
+  .strip-icon { font-size: 13px; }
+
+  /* ── CONTENT ── */
+  .content { padding: 20px 16px; max-width: 640px; margin: 0 auto; }
+
+  .sec-label {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--brick);
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── LINK + QR SECTION ── */
+  .link-qr-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .link-card, .qr-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+  }
+  .lc-label, .qrc-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--brick);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .lc-url {
+    font-size: 12px;
+    font-weight: 500;
+    color: #185FA5;
+    word-break: break-all;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .lc-url:hover { text-decoration: underline; }
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: var(--brick);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .copy-btn:hover { background: var(--brick2); }
+  .wa-share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: #25D366;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    width: 100%;
+    transition: background 0.15s;
+  }
+  .wa-share-btn:hover { background: #1DA851; }
+
+  .qr-card { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .qr-inner {
+    background: #FFF8F0;
+    border: 2px solid #E8C9A0;
+    border-radius: 10px;
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+  .qr-inner canvas, .qr-inner img { display: block; border-radius: 6px; }
+  .qrc-sub { font-size: 10px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+  .dl-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: var(--brick);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    width: 100%;
+    transition: background 0.15s;
+  }
+  .dl-btn:hover { background: var(--brick2); }
+
+  /* ── PRICE ── */
+  .price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .price-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .price-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(140,47,14,0.12); }
+  .pc-head { padding: 12px 14px 10px; border-bottom: 1px solid var(--border); }
+  .mud-head { background: linear-gradient(135deg, #7B3B1A, #B5451B); }
+  .cem-head  { background: linear-gradient(135deg, #1A3A5C, #2D6A9F); }
+  .pc-type { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+  .pc-gst { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 20px; display: inline-block; }
+  .gst-amber { background: rgba(255,255,255,0.2); color: #FFE5B0; }
+  .pc-rows { padding: 10px 14px; }
+  .pc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px dashed rgba(140,47,14,0.1);
+  }
+  .pc-row:last-child { border-bottom: none; }
+  .size-pill { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; background: var(--sand); color: var(--brick2); }
+  .cem-pill  { background: #E8F0FB; color: #1A3A5C; }
+  .pc-price { font-size: 18px; font-weight: 600; color: var(--text); }
+  .pc-price-sub { font-size: 10px; color: var(--muted); margin-top: 1px; text-align: right; }
+
+  /* ── CALCULATOR ── */
+  .calc-card { background: #fff; border-radius: 16px; border: 1px solid var(--border); padding: 16px; margin-bottom: 20px; }
+  .calc-fields { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .calc-fields select, .calc-fields input {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    padding: 9px 12px;
+    border: 1px solid rgba(140,47,14,0.2);
+    border-radius: 10px;
+    background: var(--sand2);
+    color: var(--text);
+    outline: none;
+  }
+  .calc-fields select { flex: 1; min-width: 180px; }
+  .calc-fields input { width: 100px; }
+  .calc-fields select:focus, .calc-fields input:focus { border-color: var(--brick); }
+  .calc-result {
+    background: linear-gradient(135deg, #7B3B1A, #B5451B);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .cr-label { font-size: 11px; color: #F0C9A0; margin-bottom: 3px; }
+  .cr-breakdown { font-size: 12px; color: #FFD9B5; }
+  .cr-total { font-size: 24px; font-weight: 700; color: #fff; }
+
+  /* ── CONTACTS ── */
+  .contacts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .contact-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    transition: transform 0.2s;
+  }
+  .contact-card:hover { transform: translateY(-2px); }
+  .avatar { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; }
+  .av1 { background: linear-gradient(135deg, #B5451B, #D4632E); color: #fff; }
+  .av2 { background: linear-gradient(135deg, #1A3A5C, #2D6A9F); color: #fff; }
+  .contact-name { font-size: 15px; font-weight: 600; color: var(--text); }
+  .contact-num  { font-size: 13px; color: var(--muted); }
+  .wa-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px;
+    background: #25D366;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 4px;
+  }
+  .wa-btn:hover { background: #1DA851; transform: scale(1.02); }
+  .wa-btn:active { transform: scale(0.98); }
+  .wa-icon { width: 18px; height: 18px; fill: #fff; flex-shrink: 0; }
+
+  /* ── INSTAGRAM ── */
+  .insta-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .insta-left { display: flex; align-items: center; gap: 12px; }
+  .insta-logo {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .insta-logo svg { width: 24px; height: 24px; fill: #fff; }
+  .insta-handle { font-size: 14px; font-weight: 600; color: var(--text); }
+  .insta-sub { font-size: 11px; color: var(--muted); }
+  .insta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    background: linear-gradient(135deg, #f09433, #dc2743, #bc1888);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .insta-btn:hover { opacity: 0.88; transform: scale(1.02); }
+
+  /* ── YOUTUBE ── */
+  .yt-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .yt-left { display: flex; align-items: center; gap: 12px; }
+  .yt-logo {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: #FF0000;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .yt-logo svg { width: 26px; height: 26px; fill: #fff; }
+  .yt-handle { font-size: 14px; font-weight: 600; color: var(--text); }
+  .yt-sub { font-size: 11px; color: var(--muted); }
+  .yt-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    background: #FF0000;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .yt-btn:hover { opacity: 0.88; transform: scale(1.02); }
+
+  /* ── PROJECT GALLERY (horizontal scroll) ── */
+  .gallery-wrap {
+    margin-bottom: 20px;
+    margin-left: -16px;
+    margin-right: -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .gallery-wrap::-webkit-scrollbar { height: 6px; }
+  .gallery-wrap::-webkit-scrollbar-thumb {
+    background: var(--brick);
+    border-radius: 3px;
+    opacity: 0.5;
+  }
+  .gallery-track {
+    display: inline-flex;
+    gap: 12px;
+    padding-bottom: 8px;
+  }
+  .gallery-item {
+    flex: 0 0 auto;
+    width: 260px;
+    height: 200px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--sand);
+    scroll-snap-align: start;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .gallery-hint {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── ADDRESS ── */
+  .address-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 16px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .addr-icon-box { width: 40px; height: 40px; background: var(--sand); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .addr-icon-box svg { width: 20px; height: 20px; fill: var(--brick); }
+  .addr-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .addr-line { font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .map-link { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--brick); font-weight: 500; text-decoration: none; margin-top: 6px; }
+  .map-link:hover { text-decoration: underline; }
+
+  /* ── WHY ── */
+  .why-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 20px; }
+  .why-card { background: #fff; border-radius: 12px; border: 1px solid var(--border); padding: 12px; text-align: center; }
+  .why-emoji { font-size: 22px; margin-bottom: 5px; }
+  .why-title { font-size: 11px; font-weight: 600; color: var(--text); }
+  .why-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--brick2);
+    color: #F0C9A0;
+    text-align: center;
+    padding: 18px 20px;
+    font-size: 12px;
+    line-height: 1.8;
+    border-radius: 16px 16px 0 0;
+  }
+  .footer strong { color: #FFD9B5; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  .hero          { animation: fadeUp 0.4s ease both; }
+  .price-card    { animation: fadeUp 0.4s ease both; }
+  .price-card:nth-child(2) { animation-delay: 0.07s; }
+  .calc-card     { animation: fadeUp 0.4s 0.1s ease both; }
+  .contact-card  { animation: fadeUp 0.4s ease both; }
+  .contact-card:nth-child(2) { animation-delay: 0.07s; }
+  .insta-card    { animation: fadeUp 0.4s 0.12s ease both; }
+  .address-card  { animation: fadeUp 0.4s 0.14s ease both; }
+  .link-card, .qr-card { animation: fadeUp 0.4s ease both; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 480px) {
+    .hero-title { font-size: 22px; }
+    .price-grid, .contacts-grid, .link-qr-grid { grid-template-columns: 1fr; }
+    .why-grid { grid-template-columns: repeat(2,1fr); }
+    .calc-fields select { min-width: 100%; }
+    .insta-card { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="brand-chip"><div class="brand-dot"></div>Est. Bengaluru · Since 2012</div>
+      <h1 class="hero-title">Sri <span>Banashankramma</span><br>Interlocking Blocks</h1>
+      <div class="hero-subtitle">Stabilized Mud Interlocking Blocks · Factory Direct</div>
+      <div class="hero-desc">Premium quality stabilized mud interlocking blocks<br>directly from our factory — Kanakapura Road, Bengaluru</div>
+    </div>
+    <div class="qr-panel">
+      <div class="qr-box"><div id="qrHero"></div></div>
+      <div class="qr-label">Scan &amp; Visit</div>
+    </div>
+  </div>
+  <div class="hero-strip">
+    <div class="strip-item"><span class="strip-icon">📍</span>Vajarhalli, Kanakapura Road</div>
+    <div class="strip-item"><span class="strip-icon">🏭</span>Factory Direct</div>
+    <div class="strip-item"><span class="strip-icon">🚚</span>Bulk Delivery</div>
+    <div class="strip-item"><span class="strip-icon">✅</span>ISI Certified</div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- ═══ PRICE LIST ═══ -->
+  <div class="sec-label">Price list</div>
+  <div class="price-grid" style="grid-template-columns:1fr;">
+
+    <div class="price-card">
+      <div class="pc-head mud-head">
+        <div class="pc-type">🟤 Stabilized Mud interlocking blocks</div>
+        <div class="pc-gst gst-amber">+ 5% GST</div>
+      </div>
+      <div class="pc-rows">
+        <div class="pc-row">
+          <div class="size-pill">6 inch</div>
+          <div>
+            <div class="pc-price">₹35<span style="font-size:11px;color:#999">/pc</span></div>
+            <div class="pc-price-sub">₹36.75 with GST</div>
+          </div>
+        </div>
+        <div class="pc-row">
+          <div class="size-pill">8 inch</div>
+          <div>
+            <div class="pc-price">₹40<span style="font-size:11px;color:#999">/pc</span></div>
+            <div class="pc-price-sub">₹42.00 with GST</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin:-12px 0 20px;background:#FFF8EE;border:1px dashed rgba(181,69,27,0.25);border-radius:10px;padding:10px 14px;font-size:12px;color:#7A5C44;display:flex;align-items:center;gap:8px;">
+    🚛 <span><strong>Note:</strong> Transportation / delivery charges are extra and will be informed at the time of booking.</span>
+  </div>
+  <div class="sec-label">Quick price calculator</div>
+  <div class="calc-card">
+    <div class="calc-fields">
+      <select id="btype" onchange="calc()" oninput="calc()">
+        <option value="mud6">Stabilized Mud block — 6 inch (₹35)</option>
+        <option value="mud8">Stabilized Mud block — 8 inch (₹40)</option>
+      </select>
+      <input type="number" id="bqty" value="1000" min="1" step="100" oninput="calc()" onchange="calc()" placeholder="Qty"/>
+    </div>
+    <div class="calc-result">
+      <div>
+        <div class="cr-label">Estimated total (5% GST included)</div>
+        <div class="cr-breakdown" id="crBreak">Base ₹35,000 + GST 5% ₹1,750</div>
+      </div>
+      <div class="cr-total" id="crTotal">₹36,750</div>
+    </div>
+  </div>
+
+  <!-- ═══ CONTACTS ═══ -->
+  <div class="sec-label">Contact us on WhatsApp</div>
+  <div class="contacts-grid">
+
+    <div class="contact-card">
+      <div class="avatar av1">DG</div>
+      <div class="contact-name">Darshan Gowda</div>
+      <div class="contact-num">+91 94806 13670</div>
+      <a class="wa-btn" href="https://wa.me/919480613670?text=Hello%20Sri%20Banashankramma%20Interlocking%20Blocks%2C%20I%20would%20like%20to%20enquire%20about%20your%20blocks." target="_blank" rel="noopener">
+        <svg class="wa-icon" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+
+    <div class="contact-card">
+      <div class="avatar av2">SK</div>
+      <div class="contact-name">Shiva Kumar V M</div>
+      <div class="contact-num">+91 94483 85124</div>
+      <a class="wa-btn" href="https://wa.me/919448385124?text=Hello%20Sri%20Banashankramma%20Interlocking%20Blocks%2C%20I%20would%20like%20to%20enquire%20about%20your%20blocks." target="_blank" rel="noopener">
+        <svg class="wa-icon" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.755-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+
+  </div>
+
+  <!-- ═══ INSTAGRAM ═══ -->
+  <div class="sec-label">Follow us on Instagram</div>
+  <div class="insta-card">
+    <div class="insta-left">
+      <div class="insta-logo">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </div>
+      <div>
+        <div class="insta-handle">@interlocking_blocks_</div>
+        <div class="insta-sub">See our latest work &amp; products</div>
+      </div>
+    </div>
+    <a class="insta-btn" href="https://www.instagram.com/interlocking_blocks_?igsh=NzVjZjV6eGF3cjk5" target="_blank" rel="noopener">Follow ↗</a>
+  </div>
+
+  <!-- ═══ YOUTUBE ═══ -->
+  <div class="sec-label">Watch us on YouTube</div>
+  <div class="yt-card">
+    <div class="yt-left">
+      <div class="yt-logo">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a2.998 2.998 0 0 0-2.108-2.121C19.566 3.5 12 3.5 12 3.5s-7.566 0-9.39.565A2.998 2.998 0 0 0 .502 6.186C0 8.02 0 12 0 12s0 3.98.502 5.814a2.998 2.998 0 0 0 2.108 2.121C4.434 20.5 12 20.5 12 20.5s7.566 0 9.39-.565a2.998 2.998 0 0 0 2.108-2.121C24 15.98 24 12 24 12s0-3.98-.502-5.814zM9.546 15.568V8.432L15.818 12l-6.272 3.568z"/></svg>
+      </div>
+      <div>
+        <div class="yt-handle">@sbinterlockingblocks1432</div>
+        <div class="yt-sub">Watch our project videos</div>
+      </div>
+    </div>
+    <a class="yt-btn" href="https://youtube.com/@sbinterlockingblocks1432?si=GaJN8ZUd2X6lkNn7" target="_blank" rel="noopener">Subscribe ↗</a>
+  </div>
+
+  <!-- ═══ PROJECT GALLERY ═══ -->
+  <div class="sec-label">Our completed projects</div>
+  <div class="gallery-hint">👉 Swipe to see more projects built with our blocks</div>
+  <div class="gallery-wrap">
+    <div class="gallery-track">
+      <div class="gallery-item"><img src="project1.jpg" alt="Completed project 1" loading="lazy"></div>
+      <div class="gallery-item"><img src="project2.jpg" alt="Completed project 2" loading="lazy"></div>
+      <div class="gallery-item"><img src="project3.jpg" alt="Completed project 3" loading="lazy"></div>
+      <div class="gallery-item"><img src="project4.jpg" alt="Completed project 4" loading="lazy"></div>
+      <div class="gallery-item"><img src="project5.jpg" alt="Completed project 5" loading="lazy"></div>
+      <div class="gallery-item"><img src="project6.jpg" alt="Completed project 6" loading="lazy"></div>
+    </div>
+  </div>
+
+  <!-- ═══ ADDRESS ═══ -->
+  <div class="sec-label">Our location</div>
+  <div class="address-card">
+    <div class="addr-icon-box">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+    </div>
+    <div>
+      <div class="addr-name">Sri Banashankramma Interlocking Blocks</div>
+      <div class="addr-line">
+        15#7, Mallasandra Village, Holiday Village Road<br>
+        Vajarhalli, Kanakapura Road<br>
+        Bengaluru, Karnataka — 560062
+      </div>
+      <a class="map-link" href="https://www.google.com/maps/place/Sri+Banashankaramma+interlocking+blocks/@12.861671,77.5070157,14z/data=!4m13!1m6!4m5!1m0!1m3!2m2!1d77.5450516!2d12.8617306!3m5!1s0x3bae40118b5a657f:0xe1ea483c27488931!8m2!3d12.861671!4d77.5451245!16s%2Fg%2F11fzf5v5d3" target="_blank" rel="noopener">
+        📍 Open in Google Maps →
+      </a>
+    </div>
+  </div>
+
+  <!-- ═══ WHY US ═══ -->
+  <div class="sec-label">Why choose us</div>
+  <div class="why-grid">
+    <div class="why-card"><div class="why-emoji">🏭</div><div class="why-title">Factory direct</div><div class="why-sub">No middlemen</div></div>
+    <div class="why-card"><div class="why-emoji">✅</div><div class="why-title">ISI quality</div><div class="why-sub">Certified blocks</div></div>
+    <div class="why-card"><div class="why-emoji">🚛</div><div class="why-title">Bulk delivery</div><div class="why-sub">Bengaluru &amp; nearby</div></div>
+    <div class="why-card"><div class="why-emoji">🌱</div><div class="why-title">Eco friendly</div><div class="why-sub">Mud blocks available</div></div>
+    <div class="why-card"><div class="why-emoji">💰</div><div class="why-title">Best price</div><div class="why-sub">Lowest guaranteed</div></div>
+    <div class="why-card"><div class="why-emoji">📞</div><div class="why-title">Quick reply</div><div class="why-sub">Call or WhatsApp</div></div>
+  </div>
+
+  <!-- ═══ PRODUCT FEATURES ═══ -->
+  <div class="sec-label">Product features</div>
+  <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:20px;">
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;align-items:flex-start;gap:10px;">
+        <div style="width:28px;height:28px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;">🌿</div>
+        <div style="font-size:13px;color:var(--text);line-height:1.5;">Sustainable &amp; eco-friendly traditional building material made from locally available soil</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;">
+        <div style="width:28px;height:28px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;">💰</div>
+        <div style="font-size:13px;color:var(--text);line-height:1.5;">Made from locally available materials — a <strong>low-cost option</strong> for construction</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;">
+        <div style="width:28px;height:28px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;">🌡️</div>
+        <div style="font-size:13px;color:var(--text);line-height:1.5;">Excellent <strong>thermal insulation</strong> — keeps interiors cool in summer, warm in winter. Reduces energy bills</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;">
+        <div style="width:28px;height:28px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;">👷</div>
+        <div style="font-size:13px;color:var(--text);line-height:1.5;">Assembling does <strong>not require skilled labor</strong> — easy interlocking design</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;">
+        <div style="width:28px;height:28px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;">🏠</div>
+        <div style="font-size:13px;color:var(--text);line-height:1.5;"><strong>No plastering required</strong> on both outer and inner sides — saves cost &amp; time</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;">
+        <div style="width:28px;height:28px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;">💧</div>
+        <div style="font-size:13px;color:var(--text);line-height:1.5;">Water absorption <strong>below 5%</strong> — highly moisture resistant</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;">
+        <div style="width:28px;height:28px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;">💪</div>
+        <div style="font-size:13px;color:var(--text);line-height:1.5;">Compressive strength <strong>above 7 MPA</strong> — strong and durable construction</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ CERTIFICATE + GSTIN ═══ -->
+  <div class="sec-label">Certification &amp; GSTIN</div>
+  <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:20px;display:flex;gap:12px;align-items:stretch;flex-wrap:wrap;">
+
+    <div style="flex:1;min-width:200px;background:linear-gradient(135deg,#1A3A5C,#2D6A9F);border-radius:12px;padding:14px 16px;color:#fff;">
+      <div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#B0D0F0;margin-bottom:6px;">Bureau Veritas Certified</div>
+      <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px;">Test Report — Stabilized Mud Block</div>
+      <div style="font-size:11px;color:#B0D0F0;line-height:1.6;">
+        Report No: BVIPL-MB: BL/2910/4/2026/2<br>
+        Test Date: 30.04.2026 – 05.05.2026<br>
+        Method: IS 3495 (Part 1&amp;2) 2019<br>
+        Tested by: Bureau Veritas (India) Pvt. Ltd.
+      </div>
+    </div>
+
+    <div style="flex:1;min-width:160px;background:var(--sand);border-radius:12px;padding:14px 16px;">
+      <div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--brick);margin-bottom:6px;">GSTIN</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);letter-spacing:1px;margin-bottom:8px;">29BEVPS3642L1ZI</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.6;">
+        Registered under GST<br>
+        Karnataka, India
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ BROCHURE DOWNLOAD ═══ -->
+  <div class="sec-label">Our brochure</div>
+  <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="width:44px;height:44px;background:linear-gradient(135deg,#B5451B,#D4632E);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div>
+        <div style="font-size:14px;font-weight:600;color:var(--text);">Product Brochure</div>
+        <div style="font-size:11px;color:var(--muted);">Features, projects &amp; test certificate — PDF</div>
+      </div>
+    </div>
+    <a href="brochure.pdf"
+       target="_blank" rel="noopener"
+       style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:var(--brick);color:#fff;border-radius:10px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;text-decoration:none;transition:background 0.15s;white-space:nowrap;"
+       onmouseover="this.style.background='#8C2F0E'" onmouseout="this.style.background='#B5451B'">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      View Brochure
+    </a>
+  </div>
+
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<div style="padding:0 16px;max-width:640px;margin:0 auto;">
+  <div class="footer">
+    <strong>Sri Banashankramma Interlocking Blocks</strong><br>
+    Vajarhalli, Kanakapura Road, Bengaluru — 560062<br>
+    📞 Darshan Gowda: 94806 13670 &nbsp;|&nbsp; Shiva Kumar V M: 94483 85124<br>
+    📸 @interlocking_blocks_ &nbsp;|&nbsp; ▶ @sbinterlockingblocks1432<br>
+    WhatsApp available
+  </div>
+</div>
+
+<script>
+  /* Hero QR — links to WhatsApp */
+  var WA_MSG = encodeURIComponent("Hello Sri Banashankramma Interlocking Blocks, I would like to enquire about your blocks.");
+  new QRCode(document.getElementById("qrHero"), {
+    text: "https://wa.me/919480613670?text=" + WA_MSG,
+    width: 80, height: 80,
+    colorDark: "#5C2008", colorLight: "#FFF8F0",
+    correctLevel: QRCode.CorrectLevel.M
+  });
+
+  /* Calculator — runs on every keystroke and dropdown change */
+  var prices = {
+    mud6: { base: 35, gst: 0.05 },
+    mud8: { base: 40, gst: 0.05 }
+  };
+
+  function calc() {
+    var t      = document.getElementById('btype').value;
+    var q      = parseInt(document.getElementById('bqty').value) || 0;
+    var p      = prices[t];
+    var base   = p.base * q;
+    var gstAmt = Math.round(base * p.gst);
+    var total  = base + gstAmt;
+    document.getElementById('crBreak').textContent =
+      'Base \u20B9' + base.toLocaleString('en-IN') +
+      ' + GST 5% \u20B9' + gstAmt.toLocaleString('en-IN');
+    document.getElementById('crTotal').textContent =
+      '\u20B9' + total.toLocaleString('en-IN');
+  }
+
+  /* Run immediately on page load */
+  window.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('bqty').value = 1000;
+    calc();
+    /* Also fire on every input change live */
+    document.getElementById('btype').addEventListener('change', calc);
+    document.getElementById('bqty').addEventListener('input', calc);
+    document.getElementById('bqty').addEventListener('change', calc);
+  });
+</script>
+</body>
+</html>
